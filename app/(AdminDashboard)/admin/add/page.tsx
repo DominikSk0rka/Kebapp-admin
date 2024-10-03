@@ -1,17 +1,17 @@
 "use client";
 import Button from "@/app/components/Button";
 import CustomCheckBox from "@/app/components/CustomCheckbox";
-
+import Status from "@/app/components/Status";
 import Platform from "@/app/components/Platform";
 import { useEffect, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import Card from "@/app/components/Card";
 import Input from "@/app/components/Input";
-import TextArea from "@/app/components/TextArea";
 
 const Add = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isProductCreated, setIsProductCreated] = useState(false);
+  const [status, setStatus] = useState("");
 
   const {
     register,
@@ -42,12 +42,16 @@ const Add = () => {
       baranina: false,
       falafel: false,
       siec: "",
-      nieruchomosc: false,
-      buda: false,
+      isFoodTruck: false,
       status: "",
       kraftowy: false,
-      ponpt: "",
-      sobnd: "",
+      pn: "",
+      wt: "",
+      sr: "",
+      czw: "",
+      pt: "",
+      sob: "",
+      niedz: "",
       logo: "",
     },
   });
@@ -59,11 +63,21 @@ const Add = () => {
       setIsProductCreated(false);
     }
   }, [isProductCreated]);
+
   {
     /*-------------------------------------------------------------------------*/
   }
-
+  const handleStatusChange = (statusValue: string) => {
+    if (status === statusValue) {
+      setStatus("");
+      setValue("status", "");
+    } else {
+      setStatus(statusValue);
+      setValue("status", statusValue);
+    }
+  };
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    data.status = status;
     console.log("Data", data);
   };
   {
@@ -119,80 +133,135 @@ const Add = () => {
 
             <div>
               <p className="p-2 text-2xl font-semibold text-slate-700 mb-5">
-                Czy kebab znajduję się w nieruchomości czy w "budzie"?
+                Czy kebab znajduję się w "budzie"?
               </p>
               <div className="bg-white p-8 rounded-2xl justify-center items-center flex flex-wrap">
                 <CustomCheckBox
-                  id="nieruchomosc"
+                  id="isFoodTruck"
                   register={register}
-                  label="Nieruchomość"
+                  label="Buda"
                 />
-                <CustomCheckBox id="buda" register={register} label="Buda" />
               </div>
             </div>
             {/* --------------------------------------------------------------------------------------------- */}
             <div className="flex flex-col lg:flex-row">
-              <div className="pt-5 gap-5 flex flex-row mb-10 flex-wrap">
+              <div className="pt-5 gap-5 flex flex-row mb-40 flex-wrap">
                 <div className="w-full mr-5">
-                  <p className="p-2 text-2xl font-semibold text-slate-700 mb-5">
+                  <p className="p-2 text-2xl font-semibold text-slate-700 mb-3">
                     Informacje o statusie
                   </p>
-                  <TextArea
-                    id="status"
-                    label="Status"
-                    disabled={isLoading}
-                    register={register}
-                    errors={errors}
-                  />
+                  <div className="bg-white p-8 rounded-2xl gap-2 flex">
+                    <Status
+                      id="active"
+                      register={register}
+                      label="active"
+                      onChange={() => handleStatusChange("active")}
+                      checked={status === "active"}
+                    />
+                    <Status
+                      id="planned"
+                      register={register}
+                      label="planned"
+                      onChange={() => handleStatusChange("planned")}
+                      checked={status === "planned"}
+                    />
+                    <Status
+                      id="inactive"
+                      register={register}
+                      label="inactive"
+                      onChange={() => handleStatusChange("inactive")}
+                      checked={status === "inactive"}
+                    />
+                  </div>
                 </div>
                 <div className="w-full mr-5">
                   <p className="p-2 text-2xl font-semibold text-slate-700 mb-5">
                     Czy kebab jest kraftowy?
                   </p>
-                  <div className="bg-white p-8 rounded-2xl">
+                  <div className="bg-white p-4 rounded-2xl">
                     <CustomCheckBox
                       id="kraftowy"
                       register={register}
                       label="Tak"
                     />
                   </div>
+                  <p className="p-2 pt-3 text-2xl font-semibold text-slate-700 mb-5">
+                    Logo
+                  </p>
+                  <input
+                    type="file"
+                    id="w_image_file"
+                    onChange={(event) => {
+                      if (event.target.files && event.target.files.length > 0) {
+                        const file = event.target.files[0];
+                        setValue("w_image_file", file);
+                      }
+                    }}
+                  />
                 </div>
               </div>
               <div className="w-full lg:w-1/2">
                 <p className="p-2 pt-8 text-2xl font-semibold text-slate-700 mb-5">
                   Godziny otwarcia
                 </p>
-                <div className="bg-white p-8 rounded-2xl flex flex-col gap-4">
+                <div className="bg-white p-8 rounded-2xl grid grid-cols-2  gap-4">
                   <Input
-                    id="ponpt"
-                    label="Poniedziałek-Piątek"
+                    id="pon"
+                    label="Pon"
                     disabled={isLoading}
                     register={register}
                     errors={errors}
                     type="number"
                   />
                   <Input
-                    id="sobnd"
-                    label="Sobota-Niedziela"
+                    id="wt"
+                    label="Wt"
+                    disabled={isLoading}
+                    register={register}
+                    errors={errors}
+                    type="number"
+                  />
+                  <Input
+                    id="sr"
+                    label="Śr"
+                    disabled={isLoading}
+                    register={register}
+                    errors={errors}
+                    type="number"
+                  />
+                  <Input
+                    id="czw"
+                    label="Czw"
+                    disabled={isLoading}
+                    register={register}
+                    errors={errors}
+                    type="number"
+                  />
+                  <Input
+                    id="pt"
+                    label="Pt"
+                    disabled={isLoading}
+                    register={register}
+                    errors={errors}
+                    type="number"
+                  />
+                  <Input
+                    id="sob"
+                    label="Sob"
+                    disabled={isLoading}
+                    register={register}
+                    errors={errors}
+                    type="number"
+                  />
+                  <Input
+                    id="niedz"
+                    label="Niedz"
                     disabled={isLoading}
                     register={register}
                     errors={errors}
                     type="number"
                   />
                 </div>
-                <p className="p-2 pt-3 text-2xl font-semibold text-slate-700 mb-5">
-                  Logo
-                </p>
-                <input
-                  type="file"
-                  id="w_image_file"
-                  onChange={(event) => {
-                    if (event.target.files && event.target.files.length > 0) {
-                      const file = event.target.files[0];
-                      setValue("w_image_file", file);
-                    }
-                  }}
-                />
               </div>
             </div>
           </div>
