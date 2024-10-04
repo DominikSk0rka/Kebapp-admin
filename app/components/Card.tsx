@@ -8,8 +8,11 @@ const Card = ({
   register,
   required,
   errors,
+
+  label,
 }: {
-  type: string;
+  label: string;
+  type?: string;
   id: string;
   register: UseFormRegister<FieldValues>;
   errors: FieldErrors;
@@ -21,11 +24,12 @@ const Card = ({
         <input
           id={id}
           {...register(id, { required })}
-          type="text"
+          type={type}
+          placeholder=""
           className="w-full border-b-2 border-gray-200 focus:outline-none focus:border-blue-500"
         />
       </h1>
-      <h2 className="capitalize text-sm font-medium text-gray-500">{type}</h2>
+      <h2 className="capitalize text-sm font-medium text-gray-500">{label}</h2>
     </div>
   );
 };

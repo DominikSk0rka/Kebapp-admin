@@ -7,11 +7,15 @@ import { useEffect, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import Card from "@/app/components/Card";
 import Input from "@/app/components/Input";
+import toast from "react-hot-toast";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 const Add = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isProductCreated, setIsProductCreated] = useState(false);
+  const [isKebabCreated, setisKebabCreated] = useState(false);
   const [status, setStatus] = useState("");
+  const [validationErrors, setValidationErrors] = useState({});
 
   const {
     register,
@@ -22,29 +26,33 @@ const Add = () => {
   } = useForm<FieldValues>({
     defaultValues: {
       name: "",
-      x: "",
-      y: "",
-      adres: "",
+      coordinatesX: "",
+      coordinatesY: "",
+      closingYear: "",
+      openingYear: "",
+      address: "",
       czosnek: false,
       pomidorowy: false,
       chili: false,
       jogurtowy: false,
       curry: false,
       bbg: false,
-      pyszne: false,
-      glovo: false,
-      ubereats: false,
-      phone: "",
-      appname: "",
-      website: "",
+      HasPyszne: false,
+      hasGlovo: false,
+      hasUberEats: false,
+      phoneNumber: "",
+      appLink: "",
+      websiteLink: "",
       kurczak: false,
       wolowina: false,
       baranina: false,
       falafel: false,
-      siec: "",
+      network: "",
       isFoodTruck: false,
       status: "",
-      kraftowy: false,
+      isKraft: false,
+      mondayOpensAt: "",
+      mondayClosesAt: "",
       pn: "",
       wt: "",
       sr: "",
@@ -52,17 +60,17 @@ const Add = () => {
       pt: "",
       sob: "",
       niedz: "",
-      logo: "",
+      // logo: "",
     },
   });
 
   useEffect(() => {
-    if (isProductCreated) {
+    if (isKebabCreated) {
       reset();
       setValue("file", null);
-      setIsProductCreated(false);
+      setisKebabCreated(false);
     }
-  }, [isProductCreated]);
+  }, [isKebabCreated]);
 
   {
     /*-------------------------------------------------------------------------*/
@@ -78,6 +86,35 @@ const Add = () => {
   };
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     data.status = status;
+
+    const token = Cookies.get("token");
+
+    axios
+      .post("https://kebapp.wheelwallet.cloud/api/kebabs", data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+      })
+      .then((response) => {
+        setisKebabCreated(true);
+        toast.success("Stworzono kebaba!");
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 422) {
+          const responseData = error.response.data;
+
+          if (responseData.name) {
+            setValidationErrors({ name: responseData.name });
+            toast.error(`Wrong data ${responseData.name}`);
+          }
+        }
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+    console.log("Token", token);
     console.log("Data", data);
   };
   {
@@ -90,34 +127,50 @@ const Add = () => {
         {/* USER CARDS */}
         <div className="flex gap-4 justify-between flex-wrap">
           <Card
-            type="nazwa"
+            label="nazwa"
             id="name"
             register={register}
             errors={errors}
             required
           />
           <Card
-            type="adres"
-            id="adres"
+            label="adres"
+            id="address"
             register={register}
             errors={errors}
             required
           />
-          <Card type="X" id="x" register={register} errors={errors} required />
-          <Card type="Y" id="y" register={register} errors={errors} required />
+          <Input
+            label="X"
+            id="coordinatesX"
+            register={register}
+            errors={errors}
+            type="number"
+            required
+          />
+          <Input
+            label="Y"
+            id="coordinatesY"
+            register={register}
+            errors={errors}
+            type="number"
+            required
+          />
         </div>
         <div className="flex gap-4 justify-between flex-wrap">
           <Card
-            type="Rok otwarcia"
-            id="open"
+            label="Rok otwarcia"
+            id="openingYear"
             register={register}
             errors={errors}
+            type="number"
           />
           <Card
-            type="Rok zamknięcia"
-            id="closed"
+            label="Rok zamknięcia"
+            id="closingYear"
             register={register}
             errors={errors}
+            type="number"
           />
         </div>
         {/* MIDDLE CHARTS */}
@@ -128,7 +181,12 @@ const Add = () => {
               <p className="p-2 text-2xl font-semibold text-slate-700 mb-5">
                 Czy kebab znajduję się w jakiejś sieci?
               </p>
-              <Card type="siec" id="siec" register={register} errors={errors} />
+              <Card
+                label="siec"
+                id="network"
+                register={register}
+                errors={errors}
+              />
             </div>
 
             <div>
@@ -180,7 +238,7 @@ const Add = () => {
                   </p>
                   <div className="bg-white p-4 rounded-2xl">
                     <CustomCheckBox
-                      id="kraftowy"
+                      id="isKraft"
                       register={register}
                       label="Tak"
                     />
@@ -190,11 +248,11 @@ const Add = () => {
                   </p>
                   <input
                     type="file"
-                    id="w_image_file"
+                    id="logo"
                     onChange={(event) => {
                       if (event.target.files && event.target.files.length > 0) {
                         const file = event.target.files[0];
-                        setValue("w_image_file", file);
+                        setValue("logo", file);
                       }
                     }}
                   />
@@ -206,56 +264,110 @@ const Add = () => {
                 </p>
                 <div className="bg-white p-8 rounded-2xl grid grid-cols-2  gap-4">
                   <Input
-                    id="pon"
-                    label="Pon"
+                    id="mondayOpensAt"
+                    label="Pon open"
+                    disabled={isLoading}
+                    register={register}
+                    errors={errors}
+                  />
+                  <Input
+                    id="mondayClosesAt"
+                    label="Pon close"
+                    disabled={isLoading}
+                    register={register}
+                    errors={errors}
+                  />
+                  <Input
+                    id="tuesdayOpensAt"
+                    label="Wt open"
                     disabled={isLoading}
                     register={register}
                     errors={errors}
                     type="number"
                   />
                   <Input
-                    id="wt"
-                    label="Wt"
+                    id="tuesdayClosesAt"
+                    label="wt close"
                     disabled={isLoading}
                     register={register}
                     errors={errors}
                     type="number"
                   />
                   <Input
-                    id="sr"
-                    label="Śr"
+                    id="wednesdayOpensAt"
+                    label="śr open"
                     disabled={isLoading}
                     register={register}
                     errors={errors}
                     type="number"
                   />
                   <Input
-                    id="czw"
-                    label="Czw"
+                    id="wednesdayClosesAt"
+                    label="śr close"
                     disabled={isLoading}
                     register={register}
                     errors={errors}
                     type="number"
                   />
                   <Input
-                    id="pt"
-                    label="Pt"
+                    id="thursdayOpensAt"
+                    label="czw open"
                     disabled={isLoading}
                     register={register}
                     errors={errors}
                     type="number"
                   />
                   <Input
-                    id="sob"
-                    label="Sob"
+                    id="thursdayClosesAt"
+                    label="czw close"
                     disabled={isLoading}
                     register={register}
                     errors={errors}
                     type="number"
                   />
                   <Input
-                    id="niedz"
-                    label="Niedz"
+                    id="fridayOpensAt"
+                    label="pt open"
+                    disabled={isLoading}
+                    register={register}
+                    errors={errors}
+                    type="number"
+                  />
+                  <Input
+                    id="fridayClosesAt"
+                    label="pt close"
+                    disabled={isLoading}
+                    register={register}
+                    errors={errors}
+                    type="number"
+                  />
+                  <Input
+                    id="saturdayOpensAt"
+                    label="sob open"
+                    disabled={isLoading}
+                    register={register}
+                    errors={errors}
+                    type="number"
+                  />
+                  <Input
+                    id="saturdayClosesAt"
+                    label="sob close"
+                    disabled={isLoading}
+                    register={register}
+                    errors={errors}
+                    type="number"
+                  />
+                  <Input
+                    id="sundayOpensAt"
+                    label="Niedz open"
+                    disabled={isLoading}
+                    register={register}
+                    errors={errors}
+                    type="number"
+                  />
+                  <Input
+                    id="sundayClosesAt"
+                    label="Niedz close"
                     disabled={isLoading}
                     register={register}
                     errors={errors}
@@ -272,26 +384,26 @@ const Add = () => {
         <div className="text-center font-semibold text-2xl">Dostępność</div>
         <div className="flex flex-row">
           <Platform
-            id="glovo"
+            id="hasGlovo"
             register={register}
             label="glovo"
             icon="/platforms/glovo.png"
           />
           <Platform
-            id="pyszne"
+            id="hasPyszne"
             register={register}
             label="pyszne"
             icon="/platforms/pyszne.png"
           />
           <Platform
-            id="ubereats"
+            id="hasUberEats"
             register={register}
             label="ubereats"
             icon="/platforms/ubereats.png"
           />
         </div>
         <Input
-          id="phone"
+          id="phoneNumber"
           label="Telefon"
           disabled={isLoading}
           register={register}
@@ -299,14 +411,14 @@ const Add = () => {
           type="tel"
         />
         <Input
-          id="appname"
+          id="appLink"
           label="Nazwa aplikacji"
           disabled={isLoading}
           register={register}
           errors={errors}
         />
         <Input
-          id="website"
+          id="websiteLink"
           label="Strona Internetowa"
           disabled={isLoading}
           register={register}

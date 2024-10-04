@@ -1,15 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
+
 import toast from "react-hot-toast";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import Image from "next/image";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 const LoginForm = () => {
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = Cookies.get("token");
+    if (token) {
+      router.push("/");
+      router.refresh;
+    }
+  }, []);
+
   const [isLoading, setIsLoading] = useState(false);
+  const [validationErrors, setValidationErrors] = useState({});
+  const [token, setToken] = useState({});
   const {
     register,
     handleSubmit,
@@ -21,11 +36,33 @@ const LoginForm = () => {
     },
   });
 
-  const router = useRouter();
-
   const onsubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
     toast.success("Zalogowano");
+    axios
+      .post("https://kebapp.wheelwallet.cloud/api/login", data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        toast.success("Login successful", response.data);
+        setToken(response.data.accessToken);
+        console.log(token);
+        Cookies.set("token", response.data.accessToken, { expires: 1 / 24 });
+        router.push("/");
+        console.log("Token z sesji:", Cookies.get("token"));
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 401) {
+          setValidationErrors(error.response.data);
+          console.log(validationErrors);
+          toast.error("These credetials don't match our records");
+        }
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   return (
