@@ -2,14 +2,23 @@
 import React, { useEffect, forwardRef } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
-import { kebabs } from "../lib/data";
+
+interface Kebab {
+  id: number;
+  name: string;
+  address: string;
+  coordinatesX: number;
+  coordinatesY: number;
+  status: string;
+}
 
 interface LeafletMapProps {
   mapRef: React.RefObject<any>;
+  kebabs: Kebab[];
 }
 
 const LeafletMap = forwardRef<HTMLDivElement, LeafletMapProps>(
-  ({ mapRef }, ref) => {
+  ({ mapRef, kebabs }, ref) => {
     useEffect(() => {
       const DefaultIcon = L.icon({
         iconUrl: "/kebab.png",
@@ -34,11 +43,18 @@ const LeafletMap = forwardRef<HTMLDivElement, LeafletMapProps>(
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
         />
 
-        {kebabs.map((kebab, index) => (
-          <Marker key={index} position={kebab.position as L.LatLngTuple}>
+        {kebabs.map((kebab) => (
+          <Marker
+            key={kebab.id}
+            position={[kebab.coordinatesX, kebab.coordinatesY] as L.LatLngTuple}
+          >
             <Popup>
-              {kebab.name}, {kebab.position[0]} {kebab.position[1]}
-              <br />
+              <div className="flex flex-col justify-center items-center">
+                <p className="text-xl font-semibold text-slate-700">
+                  {kebab.name}
+                </p>
+                <p>{kebab.address}</p>
+              </div>
             </Popup>
           </Marker>
         ))}
