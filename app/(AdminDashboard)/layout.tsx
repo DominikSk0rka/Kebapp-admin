@@ -19,7 +19,7 @@ export default function DashboardLayout({
         >
           <Image
             src="/logo.png"
-            className="rounded-xl"
+            className="rounded-xl transition hover:scale-105"
             alt="logo"
             width={256}
             height={256}

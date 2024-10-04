@@ -5,6 +5,7 @@ import "leaflet/dist/leaflet.css";
 import SearchKebab from "@/app/components/SearchKebab";
 import { kebabs } from "@/app/lib/data";
 import L from "leaflet";
+import KebabStatusControl from "@/app/components/KebabStatusControl";
 
 const LeafletMap = dynamic(() => import("@/app/components/LeafMap"), {
   ssr: false,
