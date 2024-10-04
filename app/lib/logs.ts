@@ -1,0 +1,51 @@
+export const logs = [
+  {
+    username: "ADMIN",
+    action: "LOGIN",
+    id: "1",
+    hour: "17:24",
+    date: "24.05.2022",
+  },
+  {
+    username: "ADMIN",
+    action: "DELETE",
+    id: "2",
+    hour: "17:24",
+    date: "24.05.2022",
+  },
+  {
+    username: "USER",
+    action: "LIKE",
+    id: "3",
+    hour: "17:24",
+    date: "24.05.2022",
+  },
+  {
+    username: "ADMIN",
+    action: "POST",
+    id: "4",
+    hour: "17:24",
+    date: "24.05.2022",
+  },
+  {
+    username: "USER",
+    action: "LOGIN",
+    id: "5",
+    hour: "17:24",
+    date: "24.05.2022",
+  },
+  {
+    username: "ADMIN",
+    action: "PUT",
+    id: "6",
+    hour: "17:24",
+    date: "24.05.2022",
+  },
+  {
+    username: "USER",
+    action: "UNLIKE",
+    id: "7",
+    hour: "17:24",
+    date: "24.05.2022",
+  },
+];
