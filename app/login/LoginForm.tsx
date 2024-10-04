@@ -38,7 +38,6 @@ const LoginForm = () => {
 
   const onsubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
-    toast.success("Zalogowano");
     axios
       .post("https://kebapp.wheelwallet.cloud/api/login", data, {
         headers: {
@@ -46,18 +45,18 @@ const LoginForm = () => {
         },
       })
       .then((response) => {
-        toast.success("Login successful", response.data);
+        toast.success("Zalogowano", response.data);
         setToken(response.data.accessToken);
         console.log(token);
         Cookies.set("token", response.data.accessToken, { expires: 1 / 24 });
-        router.push("/");
+        router.push("/admin");
         console.log("Token z sesji:", Cookies.get("token"));
       })
       .catch((error) => {
         if (error.response && error.response.status === 401) {
           setValidationErrors(error.response.data);
           console.log(validationErrors);
-          toast.error("These credetials don't match our records");
+          toast.error("Te dane się nie zgadzają");
         }
       })
       .finally(() => {

@@ -243,7 +243,7 @@ const Add = () => {
                       label="Tak"
                     />
                   </div>
-                  <p className="p-2 pt-3 text-2xl font-semibold text-slate-700 mb-5">
+                  {/* <p className="p-2 pt-3 text-2xl font-semibold text-slate-700 mb-5">
                     Logo
                   </p>
                   <input
@@ -255,7 +255,7 @@ const Add = () => {
                         setValue("logo", file);
                       }
                     }}
-                  />
+                  /> */}
                 </div>
               </div>
               <div className="w-full lg:w-1/2">
