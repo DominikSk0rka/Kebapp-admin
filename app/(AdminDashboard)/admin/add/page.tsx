@@ -10,12 +10,29 @@ import Input from "@/app/components/Input";
 import toast from "react-hot-toast";
 import axios from "axios";
 import Cookies from "js-cookie";
+import CustomCheckBoxtab from "@/app/components/CustomCheckboxtab";
+
+const meatTypes = [
+  { id: 1, name: "Kurczak" },
+  { id: 2, name: "Wołowina" },
+  { id: 3, name: "Jagnięcina" },
+  { id: 4, name: "Wieprzowina" },
+  { id: 5, name: "Falafel" },
+];
+
+const sauces = [
+  { id: 1, name: "Łagodny", isSpicy: false },
+  { id: 2, name: "Czosnek", isSpicy: false },
+  { id: 3, name: "Pikantny", isSpicy: true },
+  { id: 4, name: "Mieszany", isSpicy: true },
+];
 
 const Add = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isKebabCreated, setisKebabCreated] = useState(false);
   const [status, setStatus] = useState("");
-  const [validationErrors, setValidationErrors] = useState({});
+  const [selectedMeatTypes, setSelectedMeatTypes] = useState(new Set());
+  const [selectedSauces, setSelectedSauces] = useState(new Set());
 
   const {
     register,
@@ -31,22 +48,12 @@ const Add = () => {
       closingYear: "",
       openingYear: "",
       address: "",
-      czosnek: false,
-      pomidorowy: false,
-      chili: false,
-      jogurtowy: false,
-      curry: false,
-      bbg: false,
       HasPyszne: false,
       hasGlovo: false,
       hasUberEats: false,
       phoneNumber: "",
       appLink: "",
       websiteLink: "",
-      kurczak: false,
-      wolowina: false,
-      baranina: false,
-      falafel: false,
       network: "",
       isFoodTruck: false,
       status: "",
@@ -65,7 +72,10 @@ const Add = () => {
       saturdayClosesAt: "",
       sundayOpensAt: "",
       sundayClosesAt: "",
-      // logo: "",
+
+      meatTypeIds: [],
+      sauceIds: [],
+      logo: "",
     },
   });
 
@@ -73,9 +83,39 @@ const Add = () => {
     if (isKebabCreated) {
       reset();
       setValue("file", null);
+      setValue("status", "");
+      setStatus("");
+      setSelectedMeatTypes(new Set());
+      setValue("meatTypeIds", []);
+      setSelectedSauces(new Set());
+      setValue("sauceIds", []);
       setisKebabCreated(false);
     }
-  }, [isKebabCreated]);
+  }, [isKebabCreated, reset, setValue]);
+  const handleCheckboxChange = (id: number) => {
+    const newSelectedMeatTypes = new Set(selectedMeatTypes);
+
+    if (newSelectedMeatTypes.has(id)) {
+      newSelectedMeatTypes.delete(id);
+    } else {
+      newSelectedMeatTypes.add(id);
+    }
+
+    setSelectedMeatTypes(newSelectedMeatTypes);
+    setValue("meatTypeIds", Array.from(newSelectedMeatTypes));
+  };
+  const handleSauceChange = (id: number) => {
+    const newSelectedSauces = new Set(selectedSauces);
+
+    if (newSelectedSauces.has(id)) {
+      newSelectedSauces.delete(id);
+    } else {
+      newSelectedSauces.add(id);
+    }
+
+    setSelectedSauces(newSelectedSauces);
+    setValue("sauceIds", Array.from(newSelectedSauces));
+  };
 
   {
     /*-------------------------------------------------------------------------*/
@@ -93,43 +133,50 @@ const Add = () => {
     data.status = status;
 
     const token = Cookies.get("token");
+    let kebabId;
 
-    axios
-      .post("https://kebapp.wheelwallet.cloud/api/kebabs", data, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      })
-      .then((response) => {
-        setisKebabCreated(true);
-        toast.success("Stworzono kebaba!");
-      })
-      .catch((error) => {
-        if (error.response && error.response.status === 422) {
-          const responseData = error.response.data;
-
-          if (responseData.name) {
-            setValidationErrors({ name: responseData.name });
-            toast.error(`Wrong data ${responseData.name}`);
-          }
+    try {
+      const response = await axios.post(
+        "https://kebapp.wheelwallet.cloud/api/kebabs",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
         }
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-    console.log("Token", token);
-    console.log("Data", data);
+      );
+
+      const kebabId = response.data.id;
+      setisKebabCreated(true);
+
+      if (data.logo && kebabId) {
+        const formData = new FormData();
+        formData.append("logo", data.logo);
+
+        await axios.post(
+          `https://kebapp.wheelwallet.cloud/api/kebabs/${kebabId}/logo`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        toast.success("Logo uploaded!");
+      }
+    } catch (error) {}
   };
+
   {
     /*-------------------------------------------------------------------------*/
   }
   return (
     <div className="p-4 flex gap-4 flex-col md:flex-row">
-      {/* LEFT */}
       <div className="w-full lg:w-2/3 flex flex-col gap-8">
-        {/* USER CARDS */}
         <div className="flex gap-4 justify-between flex-wrap">
           <Card
             label="nazwa"
@@ -248,7 +295,8 @@ const Add = () => {
                       label="Tak"
                     />
                   </div>
-                  {/* <p className="p-2 pt-3 text-2xl font-semibold text-slate-700 mb-5">
+                  {/* --------------------------------------------------------------------------------------------- */}
+                  <p className="p-2 pt-3 text-2xl font-semibold text-slate-700 mb-5">
                     Logo
                   </p>
                   <input
@@ -260,7 +308,8 @@ const Add = () => {
                         setValue("logo", file);
                       }
                     }}
-                  /> */}
+                  />
+                  {/* --------------------------------------------------------------------------------------------- */}
                 </div>
               </div>
               <div className="w-full lg:w-1/2">
@@ -417,31 +466,31 @@ const Add = () => {
           register={register}
           errors={errors}
         />
+
         <div className="bg-white p-8 rounded-2xl justify-center items-center flex flex-wrap">
           <p className="p-2 text-2xl font-semibold text-slate-700">Mięsa</p>
-          <CustomCheckBox id="kurczak" register={register} label="Kurczak" />
-          <CustomCheckBox id="wolowina" register={register} label="Wolowina" />
-          <CustomCheckBox id="baranina" register={register} label="Baranina" />
-          <CustomCheckBox id="falafel" register={register} label="Falafel" />
+          {meatTypes.map((meat) => (
+            <CustomCheckBoxtab
+              key={meat.id}
+              id={`meatType_${meat.id}`}
+              label={meat.name}
+              register={register}
+              checked={selectedMeatTypes.has(meat.id)}
+              onChange={() => handleCheckboxChange(meat.id)}
+            />
+          ))}
+
           <p className="mb-4 text-2xl font-semibold text-slate-700">Sosy</p>
-          <CustomCheckBox
-            id="czosnek"
-            register={register}
-            label="Sos czosnkowy"
-          />
-          <CustomCheckBox
-            id="pomidorowy"
-            register={register}
-            label="Sos pomidorowy"
-          />
-          <CustomCheckBox id="chili" register={register} label="Sos chili" />
-          <CustomCheckBox
-            id="jogurtowy"
-            register={register}
-            label="Sos jogurtowy"
-          />
-          <CustomCheckBox id="curry" register={register} label="Sos curry" />
-          <CustomCheckBox id="bbg" register={register} label="Sos BBQ" />
+          {sauces.map((sauce) => (
+            <CustomCheckBoxtab
+              key={sauce.id}
+              id={`sauce_${sauce.id}`}
+              label={sauce.name}
+              register={register}
+              checked={selectedSauces.has(sauce.id)}
+              onChange={() => handleSauceChange(sauce.id)}
+            />
+          ))}
         </div>
         <Button
           label={isLoading ? "Ładuję się..." : "Dodaj Kebaba"}
