@@ -2,7 +2,6 @@
 
 import ActionBtn from "@/app/components/ActionBtn";
 import Table from "@/app/components/Table";
-import TableSearch from "@/app/components/TableSearch";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaEdit } from "react-icons/fa";
@@ -10,13 +9,53 @@ import { MdDelete } from "react-icons/md";
 import Cookies from "js-cookie";
 import axios from "axios";
 import Pagination from "@/app/components/Pagination";
+import Modal from "@/app/components/Modal";
+import EditKebabForm from "@/app/components/EditKebabForm";
+
+interface MeatType {
+  id: number;
+  name: string;
+}
+interface OpeningHour {
+  weekDay: string;
+  opensAt: string;
+  closesAt: string;
+}
+
+interface Sauce {
+  id: number;
+  name: string;
+  isSpicy: boolean;
+}
 
 interface Kebab {
   id: number;
   name: string;
   address: string;
-  status: string;
+  status: "active" | "inactive" | "planned";
+  coordinatesX: number;
+  coordinatesY: number;
+  closingYear: number;
+  openingYear: number;
+  network: string;
+  isKraft: boolean;
+  isFoodTruck: boolean;
+  hasPyszne: boolean;
+  hasGlovo: boolean;
+  hasUberEats: boolean;
+  phoneNumber: string;
+  appLink: string;
+  websiteLink: string;
+  meatTypes: MeatType[];
+  sauces: Sauce[];
+  openingHours: OpeningHour[];
 }
+
+const statusTranslations: Record<string, string> = {
+  inactive: "Nieaktywny",
+  active: "Aktywny",
+  planned: "Planowany",
+};
 
 const columns = [
   { header: "Nazwa" },
@@ -29,6 +68,8 @@ const Manage: React.FC = () => {
   const [kebabs, setKebabs] = useState<Kebab[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [selectedKebab, setSelectedKebab] = useState<Kebab | null>(null);
   const token = Cookies.get("token");
 
   useEffect(() => {
@@ -48,7 +89,7 @@ const Manage: React.FC = () => {
       const data = await response.json();
       console.log(data);
       setKebabs(data.data);
-      setTotalPages(data.meta.last_page || 1); // Ustawiamy totalPages
+      setTotalPages(data.meta.last_page || 1);
     } catch (error) {
       console.error("Błąd z pobieraniem danych", error);
       toast.error("Nie można załadować kebabów, spróbuj ponownie.");
@@ -73,8 +114,9 @@ const Manage: React.FC = () => {
     }
   };
 
-  const handleEditKebab = (id: number) => {
-    toast.success("Edytuj produkt");
+  const handleEditKebab = (kebab: Kebab) => {
+    setSelectedKebab(kebab);
+    setIsModalOpen(true);
   };
 
   const renderRow = (item: Kebab) => (
@@ -84,10 +126,13 @@ const Manage: React.FC = () => {
     >
       <td className="flex items-center gap-4 p-4">{item.name}</td>
       <td>{item.address}</td>
-      <td className="hidden md:table-cell">{item.status}</td>
+      <td className="hidden md:table-cell">
+        {" "}
+        {statusTranslations[item.status.toLowerCase()] || item.status}
+      </td>
       <td>
         <div className="flex flex-row gap-2">
-          <ActionBtn icon={FaEdit} onClick={() => handleEditKebab(item.id)} />
+          <ActionBtn icon={FaEdit} onClick={() => handleEditKebab(item)} />
           <ActionBtn
             icon={MdDelete}
             onClick={() => handleDeleteKebab(item.id)}
@@ -107,14 +152,10 @@ const Manage: React.FC = () => {
 
   return (
     <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
-      {/* TOP */}
       <div className="flex items-center justify-between">
         <h1 className="hidden md:block text-lg font-semibold">
           Zarządzaj Kebabami
         </h1>
-        <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
-          <TableSearch />
-        </div>
       </div>
 
       <Table columns={columns} renderRow={renderRow} data={kebabs} />
@@ -124,6 +165,16 @@ const Manage: React.FC = () => {
         onNextPage={handleNextPage}
         onPrevPage={handlePrevPage}
       />
+
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        {selectedKebab && (
+          <EditKebabForm
+            kebab={selectedKebab}
+            onClose={() => setIsModalOpen(false)}
+            onSave={() => fetchData(currentPage)}
+          />
+        )}
+      </Modal>
     </div>
   );
 };

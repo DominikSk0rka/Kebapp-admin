@@ -5,8 +5,8 @@ interface CustomCheckBoxProps {
   label: string;
   disabled?: boolean;
   register: UseFormRegister<FieldValues>;
-  checked?: boolean; // New prop for checked state
-  onChange?: () => void; // New prop for change event
+  checked?: boolean;
+  onChange?: () => void;
 }
 
 const CustomCheckBoxtab: React.FC<CustomCheckBoxProps> = ({
@@ -14,7 +14,7 @@ const CustomCheckBoxtab: React.FC<CustomCheckBoxProps> = ({
   label,
   disabled,
   register,
-  checked = false, // Default value
+  checked = false,
   onChange,
 }) => {
   return (
@@ -25,8 +25,8 @@ const CustomCheckBoxtab: React.FC<CustomCheckBoxProps> = ({
         disabled={disabled}
         {...register(id)}
         className="cursor-pointer w-6 h-6 accent-green-300"
-        checked={checked} // Set checked state
-        onChange={onChange} // Handle change event
+        checked={checked}
+        onChange={onChange}
       />
       <label
         htmlFor={id}

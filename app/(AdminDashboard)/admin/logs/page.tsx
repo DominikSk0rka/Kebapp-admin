@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Table from "@/app/components/Table";
-import TableSearch from "@/app/components/TableSearch";
 import Pagination from "@/app/components/Pagination";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
+import Image from "next/image";
 
 interface Log {
   id: number;
@@ -28,6 +28,7 @@ const Logs: React.FC = () => {
   const [logs, setLogs] = useState<Log[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const token = Cookies.get("token");
 
   useEffect(() => {
@@ -58,6 +59,17 @@ const Logs: React.FC = () => {
     }
   };
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const filteredLogs = logs.filter(
+    (log) =>
+      log.userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      log.actionName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      log.method.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const renderRow = (item: Log) => (
     <tr
       key={item.id}
@@ -86,11 +98,20 @@ const Logs: React.FC = () => {
       <div className="flex items-center justify-between">
         <h1 className="hidden md:block text-lg font-semibold">Logi</h1>
         <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
-          <TableSearch />
+          <div className="w-full md:w-auto flex items-center gap-2 text-xs rounded-full ring-[1.5px] ring-gray-300 px-2">
+            <Image src="/search.png" alt="" width={14} height={14} />
+            <input
+              type="text"
+              placeholder="Szukaj..."
+              className="w-[200px] p-2 bg-transparent outline-none"
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
+          </div>
         </div>
       </div>
 
-      <Table columns={columns} renderRow={renderRow} data={logs} />
+      <Table columns={columns} renderRow={renderRow} data={filteredLogs} />
 
       <Pagination
         currentPage={currentPage}

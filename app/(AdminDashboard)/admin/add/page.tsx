@@ -323,6 +323,7 @@ const Add = () => {
                     disabled={isLoading}
                     register={register}
                     errors={errors}
+                    type="time"
                   />
                   <Input
                     id="mondayClosesAt"
@@ -330,6 +331,7 @@ const Add = () => {
                     disabled={isLoading}
                     register={register}
                     errors={errors}
+                    type="time"
                   />
                   <Input
                     id="tuesdayOpensAt"
@@ -337,6 +339,7 @@ const Add = () => {
                     disabled={isLoading}
                     register={register}
                     errors={errors}
+                    type="time"
                   />
                   <Input
                     id="tuesdayClosesAt"
@@ -344,6 +347,7 @@ const Add = () => {
                     disabled={isLoading}
                     register={register}
                     errors={errors}
+                    type="time"
                   />
                   <Input
                     id="wednesdayOpensAt"
@@ -351,6 +355,7 @@ const Add = () => {
                     disabled={isLoading}
                     register={register}
                     errors={errors}
+                    type="time"
                   />
                   <Input
                     id="wednesdayClosesAt"
@@ -358,6 +363,7 @@ const Add = () => {
                     disabled={isLoading}
                     register={register}
                     errors={errors}
+                    type="time"
                   />
                   <Input
                     id="thursdayOpensAt"
@@ -365,6 +371,7 @@ const Add = () => {
                     disabled={isLoading}
                     register={register}
                     errors={errors}
+                    type="time"
                   />
                   <Input
                     id="thursdayClosesAt"
@@ -372,6 +379,7 @@ const Add = () => {
                     disabled={isLoading}
                     register={register}
                     errors={errors}
+                    type="time"
                   />
                   <Input
                     id="fridayOpensAt"
@@ -379,6 +387,7 @@ const Add = () => {
                     disabled={isLoading}
                     register={register}
                     errors={errors}
+                    type="time"
                   />
                   <Input
                     id="fridayClosesAt"
@@ -386,6 +395,7 @@ const Add = () => {
                     disabled={isLoading}
                     register={register}
                     errors={errors}
+                    type="time"
                   />
                   <Input
                     id="saturdayOpensAt"
@@ -393,6 +403,7 @@ const Add = () => {
                     disabled={isLoading}
                     register={register}
                     errors={errors}
+                    type="time"
                   />
                   <Input
                     id="saturdayClosesAt"
@@ -400,6 +411,7 @@ const Add = () => {
                     disabled={isLoading}
                     register={register}
                     errors={errors}
+                    type="time"
                   />
                   <Input
                     id="sundayOpensAt"
@@ -407,6 +419,7 @@ const Add = () => {
                     disabled={isLoading}
                     register={register}
                     errors={errors}
+                    type="time"
                   />
                   <Input
                     id="sundayClosesAt"
@@ -414,6 +427,7 @@ const Add = () => {
                     disabled={isLoading}
                     register={register}
                     errors={errors}
+                    type="time"
                   />
                 </div>
               </div>
