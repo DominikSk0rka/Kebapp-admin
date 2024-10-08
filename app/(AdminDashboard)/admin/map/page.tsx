@@ -70,7 +70,7 @@ const Map = () => {
             className="flex flex-col justify-center items-center bg-white h-20 w-24 rounded-xl border border-slate-400 cursor-pointer transition hover:scale-105"
             onClick={() => handleStatusClick("active")}
           >
-            <p className="bg-green-200 p-1 rounded-2xl w-20 flex justify-center items-center mb-2">
+            <p className="bg-green-200 p-1 rounded-2xl w-20 flex justify-center items-center mb-2 font-semibold">
               Aktywne
             </p>
             <p className="text-xl font-semibold text-slate-500">
@@ -81,7 +81,7 @@ const Map = () => {
             className="flex flex-col justify-center items-center bg-white h-20 w-48 rounded-xl border border-slate-400 cursor-pointer transition hover:scale-105"
             onClick={() => handleStatusClick("planned")}
           >
-            <p className="bg-sky-200 p-1 rounded-2xl w-28 flex justify-center items-center mb-2">
+            <p className="bg-sky-200 p-1 rounded-2xl w-28 flex justify-center items-center mb-2 font-semibold">
               W planach
             </p>
             <p className="text-xl font-semibold text-slate-500">
@@ -92,7 +92,7 @@ const Map = () => {
             className="flex flex-col justify-center items-center bg-white h-20 w-24 rounded-xl border border-slate-400 cursor-pointer transition hover:scale-105"
             onClick={() => handleStatusClick("inactive")}
           >
-            <p className="bg-rose-200 p-1 rounded-2xl w-20 flex justify-center items-center mb-2">
+            <p className="bg-rose-200 p-1 rounded-2xl w-20 flex justify-center items-center mb-2 font-semibold">
               Zamknięte
             </p>
             <p className="text-xl font-semibold text-slate-500">
