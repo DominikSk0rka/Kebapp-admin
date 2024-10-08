@@ -49,6 +49,20 @@ interface Kebab {
   meatTypes: MeatType[];
   sauces: Sauce[];
   openingHours: OpeningHour[];
+  mondayOpensAt: string;
+  mondayClosesAt: string;
+  tuesdayOpensAt: string;
+  tuesdayClosesAt: string;
+  wednesdayOpensAt: string;
+  wednesdayClosesAt: string;
+  thursdayOpensAt: string;
+  thursdayClosesAt: string;
+  fridayOpensAt: string;
+  fridayClosesAt: string;
+  saturdayOpensAt: string;
+  saturdayClosesAt: string;
+  sundayOpensAt: string;
+  sundayClosesAt: string;
 }
 
 const statusTranslations: Record<string, string> = {
@@ -87,6 +101,7 @@ const Manage: React.FC = () => {
       }
 
       const data = await response.json();
+
       console.log(data);
       setKebabs(data.data);
       setTotalPages(data.meta.last_page || 1);
@@ -122,7 +137,7 @@ const Manage: React.FC = () => {
   const renderRow = (item: Kebab) => (
     <tr
       key={item.id}
-      className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight"
+      className="border-b border-gray-200 even:bg-slate-50 text-sm p-8"
     >
       <td className="flex items-center gap-4 p-4">{item.name}</td>
       <td>{item.address}</td>

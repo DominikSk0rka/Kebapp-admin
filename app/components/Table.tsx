@@ -1,12 +1,12 @@
-const Table = ({
-  columns,
-  renderRow,
-  data,
-}: {
-  columns: { header: string; className?: string }[]; // Removed accessor
+import React from "react";
+
+interface TableProps {
+  columns: { header: React.ReactNode; className?: string }[];
   renderRow: (item: any) => React.ReactNode;
   data: any[];
-}) => {
+}
+
+const Table: React.FC<TableProps> = ({ columns, renderRow, data }) => {
   return (
     <table className="w-full mt-4">
       <thead>

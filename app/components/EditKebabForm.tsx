@@ -43,6 +43,21 @@ interface EditKebabFormProps {
     meatTypes: MeatType[];
     sauces: Sauce[];
     openingHours: OpeningHour[];
+
+    mondayOpensAt: string;
+    mondayClosesAt: string;
+    tuesdayOpensAt: string;
+    tuesdayClosesAt: string;
+    wednesdayOpensAt: string;
+    wednesdayClosesAt: string;
+    thursdayOpensAt: string;
+    thursdayClosesAt: string;
+    fridayOpensAt: string;
+    fridayClosesAt: string;
+    saturdayOpensAt: string;
+    saturdayClosesAt: string;
+    sundayOpensAt: string;
+    sundayClosesAt: string;
   };
   onClose: () => void;
   onSave: () => void;
@@ -67,6 +82,8 @@ const EditKebabForm: React.FC<EditKebabFormProps> = ({
   onClose,
   onSave,
 }) => {
+  const token = Cookies.get("token");
+
   const [name, setName] = useState(kebab.name);
   const [address, setAddress] = useState(kebab.address);
   const [network, setNetwork] = useState(kebab.network);
@@ -86,7 +103,66 @@ const EditKebabForm: React.FC<EditKebabFormProps> = ({
   const [appLink, setAppLink] = useState(kebab.appLink);
   const [websiteLink, setWebsiteLink] = useState(kebab.websiteLink);
 
-  const token = Cookies.get("token");
+  //----------------------------------------------------------------------------------------------------
+  const openingHoursMap: {
+    [key: string]: { opensAt: string; closesAt: string };
+  } = {};
+  kebab.openingHours.forEach((hour) => {
+    openingHoursMap[hour.weekDay.toLowerCase()] = {
+      opensAt: hour.opensAt,
+      closesAt: hour.closesAt,
+    };
+  });
+
+  const [mondayOpensAt, setMondayOpensAt] = useState(
+    openingHoursMap["monday"].opensAt
+  );
+  const [mondayClosesAt, setMondayClosesAt] = useState(
+    openingHoursMap["monday"].closesAt
+  );
+
+  const [tuesdayOpensAt, setTuesdayOpensAt] = useState(
+    openingHoursMap["tuesday"].opensAt
+  );
+  const [tuesdayClosesAt, setTuesdayClosesAt] = useState(
+    openingHoursMap["tuesday"].closesAt
+  );
+
+  const [wednesdayOpensAt, setWednesdayOpensAt] = useState(
+    openingHoursMap["wednesday"].opensAt
+  );
+  const [wednesdayClosesAt, setWednesdayClosesAt] = useState(
+    openingHoursMap["wednesday"].closesAt
+  );
+
+  const [thursdayOpensAt, setThursdayOpensAt] = useState(
+    openingHoursMap["thursday"].opensAt
+  );
+  const [thursdayClosesAt, setThursdayClosesAt] = useState(
+    openingHoursMap["thursday"].closesAt
+  );
+
+  const [fridayOpensAt, setFridayOpensAt] = useState(
+    openingHoursMap["friday"].opensAt
+  );
+  const [fridayClosesAt, setFridayClosesAt] = useState(
+    openingHoursMap["friday"].closesAt
+  );
+
+  const [saturdayOpensAt, setSaturdayOpensAt] = useState(
+    openingHoursMap["saturday"].opensAt
+  );
+  const [saturdayClosesAt, setSaturdayClosesAt] = useState(
+    openingHoursMap["saturday"].closesAt
+  );
+
+  const [sundayOpensAt, setSundayOpensAt] = useState(
+    openingHoursMap["sunday"].opensAt
+  );
+  const [sundayClosesAt, setSundayClosesAt] = useState(
+    openingHoursMap["sunday"].closesAt
+  );
+  //------------------------------------------------------------------------------------------------------
 
   const [selectedMeatTypes, setSelectedMeatTypes] = useState<number[]>(
     kebab.meatTypes.map((meat) => meat.id)
@@ -131,12 +207,24 @@ const EditKebabForm: React.FC<EditKebabFormProps> = ({
           phoneNumber,
           appLink,
           websiteLink,
-          meatTypes: allMeatTypes.filter((meat) =>
-            selectedMeatTypes.includes(meat.id)
-          ),
-          sauces: allSauces.filter((sauce) =>
-            selectedSauces.includes(sauce.id)
-          ),
+
+          mondayOpensAt,
+          mondayClosesAt,
+          tuesdayOpensAt,
+          tuesdayClosesAt,
+          wednesdayOpensAt,
+          wednesdayClosesAt,
+          thursdayOpensAt,
+          thursdayClosesAt,
+          fridayOpensAt,
+          fridayClosesAt,
+          saturdayOpensAt,
+          saturdayClosesAt,
+          sundayOpensAt,
+          sundayClosesAt,
+
+          meatTypeIds: selectedMeatTypes,
+          sauceIds: selectedSauces,
           openingHours: openingHours,
         },
         {
@@ -367,36 +455,145 @@ const EditKebabForm: React.FC<EditKebabFormProps> = ({
 
             {/*----------------------------------------------------------------------------------------------*/}
           </div>
-          <h2 className="font-semibold text-gray-600 mt-2 mb-2">
-            Godziny otwarcia:
-          </h2>
-          {openingHours.map((hour, index) => (
-            <div key={index} className="flex flex-row sm:flex-row gap-4 mb-2">
-              <span className="flex-1">{hour.weekDay}</span>
+          <div className="flex flex-col">
+            <h2 className="font-semibold text-gray-600 mt-2 mb-2">
+              Godziny otwarcia:
+            </h2>
+
+            {/* Monday */}
+            <div className="flex flex-row sm:flex-row gap-4 mb-2">
+              <span className="flex-1">Poniedziałek</span>
+
               <input
                 type="time"
-                value={hour.opensAt}
-                onChange={(e) => {
-                  const newOpeningHours = [...openingHours];
-                  newOpeningHours[index].opensAt = e.target.value;
-                  setOpeningHours(newOpeningHours);
-                }}
+                value={mondayOpensAt}
+                onChange={(e) => setMondayOpensAt(e.target.value)}
                 className="flex-1 border border-gray-300 rounded px-2 py-1"
                 required
               />
               <input
                 type="time"
-                value={hour.closesAt}
-                onChange={(e) => {
-                  const newOpeningHours = [...openingHours];
-                  newOpeningHours[index].closesAt = e.target.value;
-                  setOpeningHours(newOpeningHours);
-                }}
+                value={mondayClosesAt}
+                onChange={(e) => setMondayClosesAt(e.target.value)}
                 className="flex-1 border border-gray-300 rounded px-2 py-1"
                 required
               />
             </div>
-          ))}
+
+            {/* Tuesday */}
+            <div className="flex flex-row sm:flex-row gap-4 mb-2">
+              <span className="flex-1">Wtorek</span>
+              <input
+                type="time"
+                value={tuesdayOpensAt}
+                onChange={(e) => setTuesdayOpensAt(e.target.value)}
+                className="flex-1 border border-gray-300 rounded px-2 py-1"
+                required
+              />
+              <input
+                type="time"
+                value={tuesdayClosesAt}
+                onChange={(e) => setTuesdayClosesAt(e.target.value)}
+                className="flex-1 border border-gray-300 rounded px-2 py-1"
+                required
+              />
+            </div>
+
+            {/* Wednesday */}
+            <div className="flex flex-row sm:flex-row gap-4 mb-2">
+              <span className="flex-1">Środa</span>
+              <input
+                type="time"
+                value={wednesdayOpensAt}
+                onChange={(e) => setWednesdayOpensAt(e.target.value)}
+                className="flex-1 border border-gray-300 rounded px-2 py-1"
+                required
+              />
+              <input
+                type="time"
+                value={wednesdayClosesAt}
+                onChange={(e) => setWednesdayClosesAt(e.target.value)}
+                className="flex-1 border border-gray-300 rounded px-2 py-1"
+                required
+              />
+            </div>
+
+            {/* Thursday */}
+            <div className="flex flex-row sm:flex-row gap-4 mb-2">
+              <span className="flex-1">Czwartek</span>
+              <input
+                type="time"
+                value={thursdayOpensAt}
+                onChange={(e) => setThursdayOpensAt(e.target.value)}
+                className="flex-1 border border-gray-300 rounded px-2 py-1"
+                required
+              />
+              <input
+                type="time"
+                value={thursdayClosesAt}
+                onChange={(e) => setThursdayClosesAt(e.target.value)}
+                className="flex-1 border border-gray-300 rounded px-2 py-1"
+                required
+              />
+            </div>
+
+            {/* Friday */}
+            <div className="flex flex-row sm:flex-row gap-4 mb-2">
+              <span className="flex-1">Piątek</span>
+              <input
+                type="time"
+                value={fridayOpensAt}
+                onChange={(e) => setFridayOpensAt(e.target.value)}
+                className="flex-1 border border-gray-300 rounded px-2 py-1"
+                required
+              />
+              <input
+                type="time"
+                value={fridayClosesAt}
+                onChange={(e) => setFridayClosesAt(e.target.value)}
+                className="flex-1 border border-gray-300 rounded px-2 py-1"
+                required
+              />
+            </div>
+
+            {/* Saturday */}
+            <div className="flex flex-row sm:flex-row gap-4 mb-2">
+              <span className="flex-1">Sobota</span>
+              <input
+                type="time"
+                value={saturdayOpensAt}
+                onChange={(e) => setSaturdayOpensAt(e.target.value)}
+                className="flex-1 border border-gray-300 rounded px-2 py-1"
+                required
+              />
+              <input
+                type="time"
+                value={saturdayClosesAt}
+                onChange={(e) => setSaturdayClosesAt(e.target.value)}
+                className="flex-1 border border-gray-300 rounded px-2 py-1"
+                required
+              />
+            </div>
+
+            {/* Sunday */}
+            <div className="flex flex-row sm:flex-row gap-4 mb-2">
+              <span className="flex-1">Niedziela</span>
+              <input
+                type="time"
+                value={sundayOpensAt}
+                onChange={(e) => setSundayOpensAt(e.target.value)}
+                className="flex-1 border border-gray-300 rounded px-2 py-1"
+                required
+              />
+              <input
+                type="time"
+                value={sundayClosesAt}
+                onChange={(e) => setSundayClosesAt(e.target.value)}
+                className="flex-1 border border-gray-300 rounded px-2 py-1"
+                required
+              />
+            </div>
+          </div>
         </div>
       </div>
 
