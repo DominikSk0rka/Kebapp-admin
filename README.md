@@ -1,6 +1,6 @@
 # Dominik Skórka 42086 Kebapp, STRONA ADMINA
 
-<<<<<<< HEAD
+
 ![NPM Version](https://img.shields.io/npm/v/npm?color=orange)
 ![React Version](https://img.shields.io/badge/react-v17.0.2-brightgreen)
 ![Next.js Version](https://img.shields.io/badge/next-v12.0.7-blue)
@@ -42,12 +42,12 @@
 
 Zagadnienia (issues) zostały zaimplementowane w celu efektywnego zarządzania rozwojem aplikacji Kebapp. Dzięki nim możliwe było:
 
-- **Śledzenie Postępów:**
-- **Dokumentacja Postępów:**
+- **Śledzenie Postępów**
+- **Dokumentacja Postępów**
 
-- **Komunikacja w Zespole:**
+- **Komunikacja w Zespole**
 
-- **Priorytezacja Zadań:**
+- **Priorytezacja Zadań**
 
 | Nr Issue | Issue                                                                             | Status |
 | -------- | --------------------------------------------------------------------------------- | ------ |
@@ -100,6 +100,20 @@ Zagadnienia (issues) zostały zaimplementowane w celu efektywnego zarządzania r
 ## Testowanie
 
 Do przeprowadzenia testów został wykorzystany Cypress
+
+## Wymagania wstępne
+
+Aby uruchomić testy, upewnij się, że masz zainstalowane:
+
+- [Node.js] (zalecana wersja: LTS)
+- [npm]
+
+## Instalacja
+
+1. Sklonuj repozytorium
+2. Przeprowadz testy w trybie headless: `npx cypress run`, w trype graficznym `npx cypress open`
+    
+
 
 ![image](https://github.com/user-attachments/assets/24f2fe43-749a-42c5-8611-2da8f08de467)
 
@@ -311,7 +325,7 @@ Projekt został wdrożony na platformie Vercel, ponieważ jest to idealne rozwi�
 
 ### Strona admina: 
 1. Skopiuj repozytorium na swoje lokalne środowisko.
-2. Wpisz komende  npm install`
+2. Wpisz komende  `npm install`
 3. Uruchom serwer w środowisku lokalnym za pomocą komendy  `npm run dev`
 4. Wejdz na [http://localhost:3000](http://localhost:3000) żeby skorzystać z panelu administratora
 
@@ -323,4 +337,3 @@ Projekt został wdrożony na platformie Vercel, ponieważ jest to idealne rozwi�
   <img src="https://github.com/user-attachments/assets/fe8378b6-1cf6-4ca8-b224-7be74dbdd783" alt="2020 meme" width="700px" />
 </p>
 
->>>>>>> 67fe7e8b2cafbbe7c963e69812759b14f97d5e01
