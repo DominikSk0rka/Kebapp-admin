@@ -63,12 +63,6 @@ const ManageMessages: React.FC = () => {
     }
   };
 
-  const handlePageChange = (page: number) => {
-    if (page > 0 && page <= totalPages) {
-      setCurrentPage(page);
-    }
-  };
-
   const toggleAcceptance = async (id: number, currentAcceptance: boolean) => {
     const token = Cookies.get("token");
 

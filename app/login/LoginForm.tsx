@@ -47,15 +47,20 @@ const LoginForm = () => {
       .then((response) => {
         toast.success("Zalogowano", response.data);
         setToken(response.data.accessToken);
-        console.log(token);
+
         Cookies.set("token", response.data.accessToken, { expires: 1 / 24 });
-        router.push("/admin");
+
+        if (response.data.user.must_change_password) {
+          router.push("/newPassword");
+        } else {
+          router.push("/admin");
+        }
+
         console.log("Token z sesji:", Cookies.get("token"));
       })
       .catch((error) => {
         if (error.response && error.response.status === 401) {
           setValidationErrors(error.response.data);
-          console.log(validationErrors);
           toast.error("Te dane się nie zgadzają");
         }
       })
@@ -66,17 +71,7 @@ const LoginForm = () => {
 
   return (
     <>
-      <div
-        className="
-        flex 
-        flex-col 
-        justify-center 
-        py-24 
-        gap-5
-        sm:px-6 
-        lg:px-8 
-      "
-      >
+      <div className="flex flex-col justify-center py-24 gap-5 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <Image
             height="256"
@@ -87,19 +82,7 @@ const LoginForm = () => {
           />
         </div>
         <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-md p-4 flex flex-center items-center justify-center">
-          <div
-            className="
-        bg-white
-         flex
-          flex-col
-          gap-4
-          px-12
-          py-8
-          shadow
-          sm:rounded-lg
-          sm:px-10
-        "
-          >
+          <div className="bg-white flex flex-col gap-4 px-12 py-8 shadow sm:rounded-lg sm:px-10">
             <Input
               id="email"
               label="Login"
