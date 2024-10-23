@@ -68,8 +68,8 @@ Zagadnienia (issues) zostały zaimplementowane w celu efektywnego zarządzania r
 | 16       | Connect Api to log page & display logs                                            | ✅     |
 | 17       | Connect Edit form to API                                                          | ✅     |
 | 18       | Connect Admin Messages page to API                                                | ✅     |
-| 19       | Frist Login create password                                                       | ⏳     |
-| 20       | Perform a test with Cypress                                                       | ⏳     |
+| 19       | Frist Login create password                                                       | ✅    |
+| 20       | Perform a test with Cypress                                                       | ✅    |
 | 21       | Deploy website on Vercel                                                          | ✅     |
 
 ## Widok Strony Administartora
