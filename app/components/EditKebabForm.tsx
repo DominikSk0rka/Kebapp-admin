@@ -43,7 +43,7 @@ interface EditKebabFormProps {
     meatTypes: MeatType[];
     sauces: Sauce[];
     openingHours: OpeningHour[];
-
+    glovoUrl: string;
     mondayOpensAt: string;
     mondayClosesAt: string;
     tuesdayOpensAt: string;
@@ -85,6 +85,7 @@ const EditKebabForm: React.FC<EditKebabFormProps> = ({
   const token = Cookies.get("token");
 
   const [name, setName] = useState(kebab.name);
+  const [glovoUrl, setGlovoUrl] = useState(kebab.glovoUrl);
   const [address, setAddress] = useState(kebab.address);
   const [network, setNetwork] = useState(kebab.network);
   const [coordinatesX, setCoordinatesX] = useState(kebab.coordinatesX);
@@ -102,7 +103,29 @@ const EditKebabForm: React.FC<EditKebabFormProps> = ({
   const [phoneNumber, setPhoneNumber] = useState(kebab.phoneNumber);
   const [appLink, setAppLink] = useState(kebab.appLink);
   const [websiteLink, setWebsiteLink] = useState(kebab.websiteLink);
+  const [fetchingRates, setFetchingRates] = useState(false);
 
+  const fetchRates = async () => {
+    setFetchingRates(true);
+    try {
+      const response = await axios.post(
+        "https://kebapp.wheelwallet.cloud/api/rates-glovo",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      toast.success("Zaktualizowano pomyślnie!");
+      console.log(response.data); // Process the data as needed
+    } catch (error) {
+      toast.error("Error fetching rates.");
+      console.error(error);
+    } finally {
+      setFetchingRates(false);
+    }
+  };
   //----------------------------------------------------------------------------------------------------
   const openingHoursMap: {
     [key: string]: { opensAt: string; closesAt: string };
@@ -207,7 +230,7 @@ const EditKebabForm: React.FC<EditKebabFormProps> = ({
           phoneNumber,
           appLink,
           websiteLink,
-
+          glovoUrl,
           mondayOpensAt,
           mondayClosesAt,
           tuesdayOpensAt,
@@ -351,6 +374,13 @@ const EditKebabForm: React.FC<EditKebabFormProps> = ({
             />
             Uber Eats
           </label>
+
+          <EditInput
+            id="glovoUrl"
+            label="glovoUrl:"
+            value={glovoUrl}
+            onChange={(e) => setGlovoUrl(e.target.value)}
+          />
         </div>
 
         {/* ------------------------------------RIGHT--------------------------------------- */}
@@ -596,7 +626,20 @@ const EditKebabForm: React.FC<EditKebabFormProps> = ({
           </div>
         </div>
       </div>
-
+      <div className="mt-4">
+        <button
+          type="button"
+          onClick={fetchRates}
+          disabled={fetchingRates}
+          className={`px-4 py-2 bg-blue-500 text-white rounded-md ${
+            fetchingRates
+              ? "opacity-50 cursor-not-allowed"
+              : "hover:bg-blue-600"
+          }`}
+        >
+          {fetchingRates ? "Fetching..." : "Fetch Rates"}
+        </button>
+      </div>
       <div className="flex justify-end gap-4 mt-4">
         <button
           type="button"

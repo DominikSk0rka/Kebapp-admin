@@ -72,7 +72,7 @@ const Add = () => {
       saturdayClosesAt: "",
       sundayOpensAt: "",
       sundayClosesAt: "",
-
+      glovoUrl: "",
       meatTypeIds: [],
       sauceIds: [],
       logo: "",
@@ -458,6 +458,13 @@ const Add = () => {
             icon="/platforms/ubereats.png"
           />
         </div>
+        <Input
+          id="glovoUrl"
+          label="Glovo Url"
+          disabled={isLoading}
+          register={register}
+          errors={errors}
+        />
         <Input
           id="phoneNumber"
           label="Telefon"
