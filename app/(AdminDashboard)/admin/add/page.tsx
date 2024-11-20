@@ -137,7 +137,7 @@ const Add = () => {
 
     try {
       const response = await axios.post(
-        "https://kebapp.wheelwallet.cloud/api/kebabs",
+        "https://kebapp.bity24h.pl/api/kebabs",
         data,
         {
           headers: {
@@ -156,7 +156,7 @@ const Add = () => {
         formData.append("logo", data.logo);
 
         await axios.post(
-          `https://kebapp.wheelwallet.cloud/api/kebabs/${kebabId}/logo`,
+          `https://kebapp.bity24h.pl/api/kebabs/${kebabId}/logo`,
           formData,
           {
             headers: {

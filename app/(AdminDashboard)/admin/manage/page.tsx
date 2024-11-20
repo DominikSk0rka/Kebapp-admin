@@ -93,7 +93,7 @@ const Manage: React.FC = () => {
   const fetchData = async (page: number) => {
     try {
       const response = await fetch(
-        `https://kebapp.wheelwallet.cloud/api/kebabs/paginated?page=${page}`
+        `https://kebapp.bity24h.pl/api/kebabs/paginated?page=${page}`
       );
 
       if (!response.ok) {
@@ -113,7 +113,7 @@ const Manage: React.FC = () => {
 
   const handleDeleteKebab = async (id: number) => {
     try {
-      await axios.delete(`https://kebapp.wheelwallet.cloud/api/kebabs/${id}`, {
+      await axios.delete(`https://kebapp.bity24h.pl/api/kebabs/${id}`, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,

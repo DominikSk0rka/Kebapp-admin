@@ -17,7 +17,7 @@ const ManageMessages: React.FC = () => {
 
       try {
         const response = await axios.get(
-          `https://kebapp.wheelwallet.cloud/api/admin-messages?page=${page}`,
+          `https://kebapp.bity24h.pl/api/admin-messages?page=${page}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -44,14 +44,11 @@ const ManageMessages: React.FC = () => {
     const token = Cookies.get("token");
 
     try {
-      await axios.delete(
-        `https://kebapp.wheelwallet.cloud/api/admin-messages/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.delete(`https://kebapp.bity24h.pl/api/admin-messages/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       setMessages((prevMessages) =>
         prevMessages.filter((message) => message.id !== id)
@@ -68,7 +65,7 @@ const ManageMessages: React.FC = () => {
 
     try {
       const response = await axios.post(
-        `https://kebapp.wheelwallet.cloud/api/admin-messages/${id}/accept`,
+        `https://kebapp.bity24h.pl/api/admin-messages/${id}/accept`,
         { id: id, isAccepted: !currentAcceptance },
         {
           headers: {

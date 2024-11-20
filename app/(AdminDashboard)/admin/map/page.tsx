@@ -36,9 +36,7 @@ const Map = () => {
   useEffect(() => {
     const fetchKebabs = async () => {
       try {
-        const response = await fetch(
-          "https://kebapp.wheelwallet.cloud/api/kebabs"
-        );
+        const response = await fetch("https://kebapp.bity24h.pl/api/kebabs");
         const data = await response.json();
         console.log(data);
         setKebabs(data);

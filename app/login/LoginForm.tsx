@@ -39,7 +39,7 @@ const LoginForm = () => {
   const onsubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
     axios
-      .post("https://kebapp.wheelwallet.cloud/api/login", data, {
+      .post("https://kebapp.bity24h.pl/api/login", data, {
         headers: {
           "Content-Type": "application/json",
         },

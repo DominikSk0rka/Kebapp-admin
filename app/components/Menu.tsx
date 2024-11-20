@@ -39,16 +39,13 @@ const Menu = () => {
     const token = Cookies.get("token");
 
     try {
-      const response = await fetch(
-        "https://kebapp.wheelwallet.cloud/api/logout",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch("https://kebapp.bity24h.pl/api/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       Cookies.remove("token");
       localStorage.removeItem("token");

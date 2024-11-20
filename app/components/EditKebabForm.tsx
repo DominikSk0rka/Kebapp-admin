@@ -109,7 +109,7 @@ const EditKebabForm: React.FC<EditKebabFormProps> = ({
     setFetchingRates(true);
     try {
       const response = await axios.post(
-        "https://kebapp.wheelwallet.cloud/api/rates-glovo",
+        "https://kebapp.bity24h.pl/api/rates-glovo",
         {},
         {
           headers: {
@@ -212,7 +212,7 @@ const EditKebabForm: React.FC<EditKebabFormProps> = ({
 
     try {
       await axios.put(
-        `https://kebapp.wheelwallet.cloud/api/kebabs/${kebab.id}`,
+        `https://kebapp.bity24h.pl/api/kebabs/${kebab.id}`,
         {
           name,
           address,

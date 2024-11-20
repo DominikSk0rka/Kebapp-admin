@@ -34,7 +34,7 @@ const NewPasswordForm = () => {
     const token = Cookies.get("token");
 
     axios
-      .post("https://kebapp.wheelwallet.cloud/api/password-update", data, {
+      .post("https://kebapp.bity24h.pl/api/password-update", data, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

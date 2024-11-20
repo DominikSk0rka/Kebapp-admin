@@ -45,7 +45,7 @@ const Logs: React.FC = () => {
   const fetchLogs = async (page: number) => {
     try {
       const response = await fetch(
-        `https://kebapp.wheelwallet.cloud/api/admin-logs?page=${page}`,
+        `https://kebapp.bity24h.pl/api/admin-logs?page=${page}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
