@@ -63,6 +63,7 @@ interface Kebab {
   saturdayClosesAt: string;
   sundayOpensAt: string;
   sundayClosesAt: string;
+  glovoUrl: string;
 }
 
 const statusTranslations: Record<string, string> = {
