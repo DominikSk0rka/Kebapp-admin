@@ -58,6 +58,7 @@ interface EditKebabFormProps {
     saturdayClosesAt: string;
     sundayOpensAt: string;
     sundayClosesAt: string;
+    logoUrl?: string;
   };
   onClose: () => void;
   onSave: () => void;
@@ -104,6 +105,11 @@ const EditKebabForm: React.FC<EditKebabFormProps> = ({
   const [appLink, setAppLink] = useState(kebab.appLink);
   const [websiteLink, setWebsiteLink] = useState(kebab.websiteLink);
   const [fetchingRates, setFetchingRates] = useState(false);
+  const [logo, setLogo] = useState<File | null>(null);
+
+  //----------------------------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------------------------------
 
   const fetchRates = async () => {
     setFetchingRates(true);
@@ -126,6 +132,9 @@ const EditKebabForm: React.FC<EditKebabFormProps> = ({
       setFetchingRates(false);
     }
   };
+
+  //----------------------------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------------------------------
   //----------------------------------------------------------------------------------------------------
   const openingHoursMap: {
     [key: string]: { opensAt: string; closesAt: string };
@@ -185,8 +194,6 @@ const EditKebabForm: React.FC<EditKebabFormProps> = ({
   const [sundayClosesAt, setSundayClosesAt] = useState(
     openingHoursMap["sunday"].closesAt
   );
-  //------------------------------------------------------------------------------------------------------
-
   const [selectedMeatTypes, setSelectedMeatTypes] = useState<number[]>(
     kebab.meatTypes.map((meat) => meat.id)
   );
@@ -197,8 +204,9 @@ const EditKebabForm: React.FC<EditKebabFormProps> = ({
   const [openingHours, setOpeningHours] = useState<OpeningHour[]>(
     kebab.openingHours
   );
+  //------------------------------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------------------------------
 
-  //-------------------------------------------------------------------------------------------
   const handleSave = async () => {
     if (selectedMeatTypes.length === 0) {
       toast.error("Proszę wybrać przynajmniej jeden rodzaj mięsa.");
@@ -209,8 +217,8 @@ const EditKebabForm: React.FC<EditKebabFormProps> = ({
       toast.error("Proszę wybrać przynajmniej jeden sos.");
       return;
     }
-
     try {
+      // Aktualizacja danych kebaba
       await axios.put(
         `https://kebapp.bity24h.pl/api/kebabs/${kebab.id}`,
         {
@@ -256,6 +264,7 @@ const EditKebabForm: React.FC<EditKebabFormProps> = ({
           },
         }
       );
+
       toast.success("Kebab zaktualizowany!");
       onSave();
       onClose();
@@ -278,11 +287,39 @@ const EditKebabForm: React.FC<EditKebabFormProps> = ({
       setSelectedSauces([...selectedSauces, sauceId]);
     }
   };
-  //-------------------------------------------------------------------------------------------
 
+  const handleLogoUpdate = async () => {
+    if (!logo) {
+      toast.error("Wybierz plik przed aktualizacją loga.");
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append("logo", logo);
+
+      await axios.post(
+        `https://kebapp.bity24h.pl/api/kebabs/${kebab.id}/logo`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      toast.success("Logo zostało zaktualizowane!");
+      onSave();
+    } catch (error) {
+      toast.error("Błąd przy aktualizacji loga.");
+    }
+  };
+  //---------------------------------------------------------------------------------------------------------
+  //---------------------------------------------------------------------------------------------------------
+  //---------------------------------------------------------------------------------------------------------
   return (
     <form className="flex flex-col gap-4 w-full max-w-2xl mx-auto">
-      <div className="flex flex-row gap-4 ">
+      <div className="flex flex-row gap-4">
         {/* ------------------------------------LEFT--------------------------------------- */}
         <div className="flex flex-col flex-1.5 border-r border-gray-300 pr-4">
           <h2 className="font-semibold text-gray-600 mb-2">Rodzaje mięsa:</h2>
@@ -381,6 +418,18 @@ const EditKebabForm: React.FC<EditKebabFormProps> = ({
             value={glovoUrl}
             onChange={(e) => setGlovoUrl(e.target.value)}
           />
+          <button
+            type="button"
+            onClick={fetchRates}
+            disabled={fetchingRates}
+            className={`px-4 py-2 bg-blue-500 text-white rounded-md ${
+              fetchingRates
+                ? "opacity-50 cursor-not-allowed"
+                : "hover:bg-blue-600"
+            }`}
+          >
+            {fetchingRates ? "Fetching..." : "Fetch Rates"}
+          </button>
         </div>
 
         {/* ------------------------------------RIGHT--------------------------------------- */}
@@ -626,21 +675,45 @@ const EditKebabForm: React.FC<EditKebabFormProps> = ({
           </div>
         </div>
       </div>
-      <div className="mt-4">
+
+      <div className="flex justify-end gap-4 mt-2">
+        <div className="flex flex-col flex-1 px-2">
+          <div className="mt-4">
+            <label className="block text-sm font-medium text-gray-700">
+              Logo:
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              className="mt-1 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer focus:outline-none"
+              onChange={(e) => {
+                if (e.target.files && e.target.files.length > 0) {
+                  setLogo(e.target.files[0]);
+                }
+              }}
+            />
+            {kebab.logoUrl && (
+              <p className="mt-2 text-sm text-gray-500">
+                Aktualne logo:{" "}
+                <a
+                  href={kebab.logoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500 underline"
+                >
+                  Zobacz
+                </a>
+              </p>
+            )}
+          </div>
+        </div>
         <button
           type="button"
-          onClick={fetchRates}
-          disabled={fetchingRates}
-          className={`px-4 py-2 bg-blue-500 text-white rounded-md ${
-            fetchingRates
-              ? "opacity-50 cursor-not-allowed"
-              : "hover:bg-blue-600"
-          }`}
+          className="px-2 bg-yellow-500 text-white rounded hover:bg-yellow-700"
+          onClick={handleLogoUpdate}
         >
-          {fetchingRates ? "Fetching..." : "Fetch Rates"}
+          Zaktualizuj Logo
         </button>
-      </div>
-      <div className="flex justify-end gap-4 mt-4">
         <button
           type="button"
           className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-900"
@@ -659,4 +732,5 @@ const EditKebabForm: React.FC<EditKebabFormProps> = ({
     </form>
   );
 };
+
 export default EditKebabForm;
