@@ -105,6 +105,7 @@ const EditKebabForm: React.FC<EditKebabFormProps> = ({
   const [appLink, setAppLink] = useState(kebab.appLink);
   const [websiteLink, setWebsiteLink] = useState(kebab.websiteLink);
   const [fetchingRates, setFetchingRates] = useState(false);
+  const [fetchingRatesGoogle, setFetchingRatesGoogle] = useState(false);
   const [logo, setLogo] = useState<File | null>(null);
 
   //----------------------------------------------------------------------------------------------------
@@ -130,6 +131,29 @@ const EditKebabForm: React.FC<EditKebabFormProps> = ({
       console.error(error);
     } finally {
       setFetchingRates(false);
+    }
+  };
+
+  //----------------------------------------------------------------------------------------------------
+  const fetchRatesGoogle = async () => {
+    setFetchingRatesGoogle(true);
+    try {
+      const response = await axios.post(
+        "https://kebapp.bity24h.pl/api/rates-google",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      toast.success("Zaktualizowano pomyślnie google!");
+      console.log(response.data); // Process the data as needed
+    } catch (error) {
+      toast.error("Error fetching rates.");
+      console.error(error);
+    } finally {
+      setFetchingRatesGoogle(false);
     }
   };
 
@@ -418,18 +442,33 @@ const EditKebabForm: React.FC<EditKebabFormProps> = ({
             value={glovoUrl}
             onChange={(e) => setGlovoUrl(e.target.value)}
           />
-          <button
-            type="button"
-            onClick={fetchRates}
-            disabled={fetchingRates}
-            className={`px-4 py-2 bg-blue-500 text-white rounded-md ${
-              fetchingRates
-                ? "opacity-50 cursor-not-allowed"
-                : "hover:bg-blue-600"
-            }`}
-          >
-            {fetchingRates ? "Fetching..." : "Fetch Rates"}
-          </button>
+          <div className="flex flex-col gap-2">
+            <button
+              type="button"
+              onClick={fetchRates}
+              disabled={fetchingRates}
+              className={`px-4  py-2 bg-blue-500 text-white rounded-md ${
+                fetchingRates
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:bg-blue-600"
+              }`}
+            >
+              {fetchingRates ? "Aktualizuje..." : "Zaktualizuj ocene Glovo"}
+            </button>
+            {/* --------------------------------------------------------------------------- */}
+            <button
+              type="button"
+              onClick={fetchRatesGoogle}
+              disabled={fetchingRatesGoogle}
+              className={`px-4 py-2 bg-green-500 text-white rounded-md ${
+                fetchingRatesGoogle
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:bg-green-600"
+              }`}
+            >
+              {fetchingRates ? "Aktualizuję..." : "Zaktualizuj ocene Google"}
+            </button>
+          </div>
         </div>
 
         {/* ------------------------------------RIGHT--------------------------------------- */}
